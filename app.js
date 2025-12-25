@@ -688,9 +688,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Siguiente turno
     document.getElementById('btnNextTurn').addEventListener('click', nextTurn);
 
-    // Jugar de nuevo
+    // Jugar de nuevo - volver a configuración
     document.getElementById('btnPlayAgain').addEventListener('click', () => {
-        initGame();
+        showScreen('screenConfig');
     });
 
     document.getElementById('btnBackHome').addEventListener('click', resetGame);
