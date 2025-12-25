@@ -570,7 +570,6 @@ function endTurn() {
     gameState.isPlaying = false;
     clearInterval(gameState.timerInterval);
     playSound('timeup');
-    startMenuMusic();
 
     // Actualizar puntuación del equipo
     gameState.scores[gameState.currentTeam] += gameState.currentTurnScore;
