@@ -286,7 +286,7 @@ const WORDS = [
 
 const gameState = {
     teams: 2,
-    pointsToWin: 10,
+    roundsToWin: 1,
     timePerTurn: 60,
     scores: [],
     currentTeam: 0,
@@ -304,6 +304,8 @@ const gameState = {
 
 let audioContext = null;
 let isMuted = false;
+let menuMusic = null;
+let gameMusic = null;
 
 function initAudio() {
     if (!audioContext) {
@@ -312,6 +314,40 @@ function initAudio() {
     if (audioContext.state === 'suspended') {
         audioContext.resume();
     }
+
+    // Inicializar música
+    if (menuMusic) { menuMusic.pause(); }
+    if (gameMusic) { gameMusic.pause(); }
+
+    menuMusic = new Audio('tabu.mp3');
+    menuMusic.loop = true;
+    menuMusic.volume = 0.5;
+
+    gameMusic = new Audio('tabu2.mp3');
+    gameMusic.loop = true;
+    gameMusic.volume = 0.5;
+
+    // Iniciar música de menú
+    if (!isMuted) {
+        menuMusic.play().catch(() => {});
+    }
+}
+
+function startMenuMusic() {
+    if (isMuted) return;
+    if (gameMusic) { gameMusic.pause(); gameMusic.currentTime = 0; }
+    if (menuMusic) { menuMusic.play().catch(() => {}); }
+}
+
+function startGameMusic() {
+    if (isMuted) return;
+    if (menuMusic) { menuMusic.pause(); menuMusic.currentTime = 0; }
+    if (gameMusic) { gameMusic.play().catch(() => {}); }
+}
+
+function stopAllMusic() {
+    if (menuMusic) { menuMusic.pause(); menuMusic.currentTime = 0; }
+    if (gameMusic) { gameMusic.pause(); gameMusic.currentTime = 0; }
 }
 
 function playSound(type) {
@@ -397,11 +433,11 @@ function showScreen(screenId) {
 
 function updateConfigDisplay() {
     document.getElementById('teamsValue').textContent = gameState.teams;
-    document.getElementById('pointsValue').textContent = gameState.pointsToWin;
+    document.getElementById('roundsValue').textContent = gameState.roundsToWin;
     document.getElementById('timeValue').textContent = gameState.timePerTurn;
 
     document.getElementById('summaryTeams').textContent = gameState.teams;
-    document.getElementById('summaryPoints').textContent = gameState.pointsToWin;
+    document.getElementById('summaryRounds').textContent = gameState.roundsToWin;
     document.getElementById('summaryTime').textContent = gameState.timePerTurn;
 }
 
@@ -441,6 +477,7 @@ function startTurn() {
 
     showNextWord();
     startTimer();
+    startGameMusic();
     showScreen('screenGame');
 }
 
@@ -519,6 +556,13 @@ function handleWrong() {
     if (!gameState.isPlaying) return;
 
     playSound('wrong');
+    // Restar 5 segundos
+    gameState.timeRemaining = Math.max(0, gameState.timeRemaining - 5);
+    updateTimerDisplay();
+    if (gameState.timeRemaining <= 0) {
+        endTurn();
+        return;
+    }
     showNextWord();
 }
 
@@ -526,12 +570,13 @@ function endTurn() {
     gameState.isPlaying = false;
     clearInterval(gameState.timerInterval);
     playSound('timeup');
+    startMenuMusic();
 
     // Actualizar puntuación del equipo
     gameState.scores[gameState.currentTeam] += gameState.currentTurnScore;
 
     // Verificar victoria
-    if (gameState.scores[gameState.currentTeam] >= gameState.pointsToWin) {
+    if (gameState.scores[gameState.currentTeam] >= gameState.roundsToWin) {
         showWinner();
         return;
     }
@@ -544,7 +589,7 @@ function showTurnResult() {
     document.getElementById('resultTeamName').textContent = `Equipo ${gameState.currentTeam + 1}`;
     document.getElementById('resultPoints').textContent = `+${gameState.currentTurnScore}`;
     document.getElementById('resultTotal').textContent = gameState.scores[gameState.currentTeam];
-    document.getElementById('resultGoal').textContent = gameState.pointsToWin;
+    document.getElementById('resultGoal').textContent = gameState.roundsToWin;
 
     showScreen('screenTurnResult');
 }
@@ -579,6 +624,7 @@ function resetGame() {
     clearInterval(gameState.timerInterval);
     gameState.isPlaying = false;
     gameState.usedWords = [];
+    startMenuMusic();
     showScreen('screenHome');
 }
 
@@ -641,17 +687,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Configuración - Puntos
-    document.getElementById('btnPointsMinus').addEventListener('click', () => {
-        if (gameState.pointsToWin > 5) {
-            gameState.pointsToWin -= 5;
+    // Configuración - Rondas
+    document.getElementById('btnRoundsMinus').addEventListener('click', () => {
+        if (gameState.roundsToWin > 1) {
+            gameState.roundsToWin--;
             updateConfigDisplay();
         }
     });
 
-    document.getElementById('btnPointsPlus').addEventListener('click', () => {
-        if (gameState.pointsToWin < 50) {
-            gameState.pointsToWin += 5;
+    document.getElementById('btnRoundsPlus').addEventListener('click', () => {
+        if (gameState.roundsToWin < 20) {
+            gameState.roundsToWin++;
             updateConfigDisplay();
         }
     });
