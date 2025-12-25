@@ -286,10 +286,11 @@ const WORDS = [
 
 const gameState = {
     teams: 2,
-    roundsToWin: 1,
+    totalRounds: 1,
     timePerTurn: 60,
     scores: [],
     currentTeam: 0,
+    currentRound: 1,
     currentTurnScore: 0,
     usedWords: [],
     currentWord: null,
@@ -433,11 +434,11 @@ function showScreen(screenId) {
 
 function updateConfigDisplay() {
     document.getElementById('teamsValue').textContent = gameState.teams;
-    document.getElementById('roundsValue').textContent = gameState.roundsToWin;
+    document.getElementById('roundsValue').textContent = gameState.totalRounds;
     document.getElementById('timeValue').textContent = gameState.timePerTurn;
 
     document.getElementById('summaryTeams').textContent = gameState.teams;
-    document.getElementById('summaryRounds').textContent = gameState.roundsToWin;
+    document.getElementById('summaryRounds').textContent = gameState.totalRounds;
     document.getElementById('summaryTime').textContent = gameState.timePerTurn;
 }
 
@@ -448,6 +449,7 @@ function updateConfigDisplay() {
 function initGame() {
     gameState.scores = Array(gameState.teams).fill(0);
     gameState.currentTeam = 0;
+    gameState.currentRound = 1;
     gameState.usedWords = [];
     gameState.currentTurnScore = 0;
     showTurnScreen();
@@ -464,6 +466,7 @@ function showTurnScreen() {
     `).join('');
 
     document.getElementById('turnTeamName').textContent = `Equipo ${gameState.currentTeam + 1}`;
+    document.getElementById('turnRoundInfo').textContent = `Ronda ${gameState.currentRound} de ${gameState.totalRounds}`;
     showScreen('screenTurn');
 }
 
@@ -574,12 +577,6 @@ function endTurn() {
     // Actualizar puntuación del equipo
     gameState.scores[gameState.currentTeam] += gameState.currentTurnScore;
 
-    // Verificar victoria
-    if (gameState.scores[gameState.currentTeam] >= gameState.roundsToWin) {
-        showWinner();
-        return;
-    }
-
     // Mostrar resultado del turno
     showTurnResult();
 }
@@ -588,28 +585,52 @@ function showTurnResult() {
     document.getElementById('resultTeamName').textContent = `Equipo ${gameState.currentTeam + 1}`;
     document.getElementById('resultPoints').textContent = `+${gameState.currentTurnScore}`;
     document.getElementById('resultTotal').textContent = gameState.scores[gameState.currentTeam];
-    document.getElementById('resultGoal').textContent = gameState.roundsToWin;
 
     showScreen('screenTurnResult');
 }
 
 function nextTurn() {
-    gameState.currentTeam = (gameState.currentTeam + 1) % gameState.teams;
+    // Pasar al siguiente equipo
+    gameState.currentTeam++;
+
+    // Si todos los equipos han jugado esta ronda
+    if (gameState.currentTeam >= gameState.teams) {
+        gameState.currentTeam = 0;
+        gameState.currentRound++;
+
+        // Si se completaron todas las rondas, mostrar ganador
+        if (gameState.currentRound > gameState.totalRounds) {
+            showWinner();
+            return;
+        }
+    }
+
     showTurnScreen();
 }
 
 function showWinner() {
     playSound('win');
 
-    const winnerTeam = gameState.currentTeam;
-    document.getElementById('winnerTeamName').textContent = `Equipo ${winnerTeam + 1}`;
-    document.getElementById('winnerScore').textContent = gameState.scores[winnerTeam];
+    // Encontrar el equipo con más puntos
+    const maxScore = Math.max(...gameState.scores);
+    const winnerTeam = gameState.scores.indexOf(maxScore);
+
+    // Verificar si hay empate
+    const winners = gameState.scores.filter(s => s === maxScore);
+    const isTie = winners.length > 1;
+
+    if (isTie) {
+        document.getElementById('winnerTeamName').textContent = '¡Empate!';
+    } else {
+        document.getElementById('winnerTeamName').textContent = `Equipo ${winnerTeam + 1}`;
+    }
+    document.getElementById('winnerScore').textContent = maxScore;
 
     // Mostrar todas las puntuaciones finales
     const finalScores = document.getElementById('finalScores');
     finalScores.innerHTML = gameState.scores
         .map((score, i) => `
-            <div class="final-score-item ${i === winnerTeam ? 'winner' : ''}">
+            <div class="final-score-item ${score === maxScore ? 'winner' : ''}">
                 <span>Equipo ${i + 1}</span>
                 <span>${score}</span>
             </div>
@@ -688,15 +709,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Configuración - Rondas
     document.getElementById('btnRoundsMinus').addEventListener('click', () => {
-        if (gameState.roundsToWin > 1) {
-            gameState.roundsToWin--;
+        if (gameState.totalRounds > 1) {
+            gameState.totalRounds--;
             updateConfigDisplay();
         }
     });
 
     document.getElementById('btnRoundsPlus').addEventListener('click', () => {
-        if (gameState.roundsToWin < 20) {
-            gameState.roundsToWin++;
+        if (gameState.totalRounds < 10) {
+            gameState.totalRounds++;
             updateConfigDisplay();
         }
     });

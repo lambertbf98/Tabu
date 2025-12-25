@@ -486,6 +486,14 @@ body {
     margin-bottom: 40px;
 }
 
+.turn-round {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
 .turn-team {
     font-size: 36px;
     font-weight: 800;
