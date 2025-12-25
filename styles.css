@@ -1,0 +1,970 @@
+/* ============================================
+   TABÚ - Palabra Secreta
+   Estilos principales
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --primary: #e74c3c;
+    --primary-dark: #c0392b;
+    --primary-light: #ff6b5b;
+    --secondary: #3498db;
+    --accent: #f39c12;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --bg-dark: #1a1a2e;
+    --bg-card: #252542;
+    --bg-light: #2d2d4a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b8;
+    --text-muted: #6c6c8a;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    --radius: 16px;
+    --radius-sm: 12px;
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.5;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+/* ============================================
+   SPLASH SCREEN
+   ============================================ */
+
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #2a1a3e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.splash-content {
+    text-align: center;
+    animation: fadeInUp 0.8s ease;
+}
+
+.splash-logo {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.splash-title {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.splash-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.splash-credit {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+}
+
+.splash-tap {
+    font-size: 14px;
+    color: var(--text-secondary);
+    animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ============================================
+   APP CONTAINER
+   ============================================ */
+
+.app {
+    height: 100%;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ============================================
+   SCREENS
+   ============================================ */
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: calc(20px + var(--safe-top)) 20px calc(20px + var(--safe-bottom));
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* ============================================
+   HOME SCREEN
+   ============================================ */
+
+.home-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.logo-icon {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 20px 60px rgba(231, 76, 60, 0.4);
+    animation: float 3s ease-in-out infinite;
+}
+
+.main-icon {
+    font-size: 60px;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.logo-text {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    margin-bottom: 8px;
+}
+
+.logo-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.home-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.floating-card {
+    position: absolute;
+    font-size: 30px;
+    opacity: 0.15;
+    animation: floatRandom 6s ease-in-out infinite;
+}
+
+.card-1 { top: 15%; left: 10%; animation-delay: 0s; }
+.card-2 { top: 25%; right: 15%; animation-delay: 2s; }
+.card-3 { bottom: 20%; left: 20%; animation-delay: 4s; }
+
+@keyframes floatRandom {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(10px, -10px) rotate(5deg); }
+    50% { transform: translate(-5px, 5px) rotate(-3deg); }
+    75% { transform: translate(5px, 10px) rotate(2deg); }
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: var(--radius);
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+    width: 100%;
+    max-width: 300px;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-primary svg {
+    width: 24px;
+    height: 24px;
+}
+
+.btn-large {
+    padding: 20px 40px;
+    font-size: 20px;
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--bg-light);
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 16px;
+}
+
+.btn-secondary svg {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-back {
+    background: var(--bg-card);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.btn-back svg {
+    width: 24px;
+    height: 24px;
+}
+
+.btn-control {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    background: var(--bg-light);
+    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-control:active {
+    transform: scale(0.95);
+    background: var(--primary);
+}
+
+/* ============================================
+   SCREEN HEADER
+   ============================================ */
+
+.screen-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
+.screen-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.spacer {
+    width: 44px;
+}
+
+/* ============================================
+   CONFIG SCREEN
+   ============================================ */
+
+.config-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+.config-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 8px;
+    margin-bottom: 24px;
+}
+
+.config-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+}
+
+.config-item:not(:last-child) {
+    border-bottom: 1px solid var(--bg-light);
+}
+
+.config-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+}
+
+.config-icon {
+    font-size: 24px;
+}
+
+.config-control {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.config-value {
+    font-size: 24px;
+    font-weight: 700;
+    min-width: 50px;
+    text-align: center;
+    color: var(--primary);
+}
+
+.config-summary {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.config-content .btn-primary {
+    margin-top: auto;
+    align-self: center;
+}
+
+/* ============================================
+   TURN SCREEN
+   ============================================ */
+
+.turn-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.turn-scores {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.score-chip {
+    background: var(--bg-card);
+    padding: 12px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.score-chip.active {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
+}
+
+.score-chip .score-value {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.turn-indicator {
+    margin-bottom: 40px;
+}
+
+.turn-team {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.turn-instruction {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.turn-hint {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+/* ============================================
+   GAME SCREEN
+   ============================================ */
+
+.game-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.game-team {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.game-timer {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.timer-svg-small {
+    width: 60px;
+    height: 60px;
+    transform: rotate(-90deg);
+}
+
+.timer-bg-small {
+    fill: none;
+    stroke: var(--bg-card);
+    stroke-width: 4;
+}
+
+.timer-progress-small {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 100.53;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+}
+
+.timer-progress-small.warning {
+    stroke: var(--accent);
+}
+
+.timer-progress-small.danger {
+    stroke: var(--danger);
+}
+
+.timer-value-small {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.game-score {
+    text-align: right;
+}
+
+.game-score span:first-child {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--success);
+}
+
+.score-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   WORD CARD
+   ============================================ */
+
+.word-card {
+    flex: 1;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.word-main {
+    font-size: 36px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 30px;
+    word-break: break-word;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.word-forbidden {
+    width: 100%;
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid var(--danger);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+}
+
+.forbidden-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--danger);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.forbidden-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.forbidden-list li {
+    background: rgba(231, 76, 60, 0.15);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+/* ============================================
+   GAME ACTIONS
+   ============================================ */
+
+.game-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.btn-wrong,
+.btn-correct {
+    flex: 1;
+    padding: 20px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-wrong {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 2px solid var(--bg-light);
+}
+
+.btn-wrong:active {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: var(--danger);
+}
+
+.btn-correct {
+    background: linear-gradient(135deg, var(--success) 0%, #1e8449 100%);
+    color: white;
+    box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+}
+
+.btn-correct:active {
+    transform: scale(0.98);
+}
+
+.btn-wrong svg,
+.btn-correct svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* ============================================
+   RESULT SCREENS
+   ============================================ */
+
+.result-content,
+.winner-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.result-team {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.result-score {
+    margin-bottom: 20px;
+}
+
+.result-points {
+    font-size: 72px;
+    font-weight: 800;
+    color: var(--success);
+    display: block;
+}
+
+.result-label {
+    color: var(--text-secondary);
+    font-size: 18px;
+}
+
+.result-total {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+.result-total span {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* ============================================
+   WINNER SCREEN
+   ============================================ */
+
+.winner-trophy {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.winner-title {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.winner-team {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.winner-score {
+    font-size: 24px;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.winner-score span {
+    font-weight: 700;
+    color: var(--success);
+}
+
+.final-scores {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+    width: 100%;
+    max-width: 280px;
+}
+
+.final-score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: 12px 20px;
+    border-radius: 12px;
+}
+
+.final-score-item.winner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+.final-score-item span:last-child {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.winner-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--bg-light);
+}
+
+.modal-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.rule {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.rule:last-child {
+    margin-bottom: 0;
+}
+
+.rule-number {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.rule p {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+.rule strong {
+    color: var(--text-primary);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-height: 700px) {
+    .logo-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .main-icon {
+        font-size: 50px;
+    }
+
+    .logo-text {
+        font-size: 36px;
+    }
+
+    .logo-container {
+        margin-bottom: 40px;
+    }
+
+    .word-main {
+        font-size: 28px;
+    }
+
+    .word-card {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-height: 600px) {
+    .splash-logo {
+        font-size: 60px;
+    }
+
+    .splash-title {
+        font-size: 36px;
+    }
+}

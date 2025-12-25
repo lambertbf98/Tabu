@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Tabú - Palabra Secreta</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-content">
+            <div class="splash-logo">🚫</div>
+            <h1 class="splash-title">TABÚ</h1>
+            <div class="splash-subtitle">Palabra Secreta</div>
+            <div class="splash-credit">Created by Lambert</div>
+            <div class="splash-tap">Toca para continuar</div>
+        </div>
+    </div>
+
+    <div class="app">
+        <!-- Pantalla de Inicio -->
+        <section class="screen active" id="screenHome">
+            <div class="home-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <span class="main-icon">🚫</span>
+                    </div>
+                    <h1 class="logo-text">TABÚ</h1>
+                    <p class="logo-subtitle">¿Puedes describir sin decirlo?</p>
+                </div>
+                <button class="btn-primary btn-large" id="btnStart">
+                    <span>Nueva Partida</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <button class="btn-secondary" id="btnRules">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    <span>Cómo jugar</span>
+                </button>
+            </div>
+            <div class="home-decoration">
+                <div class="floating-card card-1">🗣️</div>
+                <div class="floating-card card-2">❌</div>
+                <div class="floating-card card-3">💭</div>
+            </div>
+        </section>
+
+        <!-- Pantalla de Configuración -->
+        <section class="screen" id="screenConfig">
+            <header class="screen-header">
+                <button class="btn-back" id="btnBackConfig">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <h2>Configuración</h2>
+                <div class="spacer"></div>
+            </header>
+            <div class="config-content">
+                <div class="config-card">
+                    <div class="config-item">
+                        <div class="config-label">
+                            <span class="config-icon">👥</span>
+                            <span>Equipos</span>
+                        </div>
+                        <div class="config-control">
+                            <button class="btn-control" id="btnTeamsMinus">−</button>
+                            <span class="config-value" id="teamsValue">2</span>
+                            <button class="btn-control" id="btnTeamsPlus">+</button>
+                        </div>
+                    </div>
+                    <div class="config-item">
+                        <div class="config-label">
+                            <span class="config-icon">🎯</span>
+                            <span>Puntos para ganar</span>
+                        </div>
+                        <div class="config-control">
+                            <button class="btn-control" id="btnPointsMinus">−</button>
+                            <span class="config-value" id="pointsValue">10</span>
+                            <button class="btn-control" id="btnPointsPlus">+</button>
+                        </div>
+                    </div>
+                    <div class="config-item">
+                        <div class="config-label">
+                            <span class="config-icon">⏱️</span>
+                            <span>Tiempo por turno (seg)</span>
+                        </div>
+                        <div class="config-control">
+                            <button class="btn-control" id="btnTimeMinus">−</button>
+                            <span class="config-value" id="timeValue">60</span>
+                            <button class="btn-control" id="btnTimePlus">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="config-summary">
+                    <p><span id="summaryTeams">2</span> equipos · <span id="summaryPoints">10</span> puntos · <span id="summaryTime">60</span>s/turno</p>
+                </div>
+                <button class="btn-primary btn-large" id="btnStartGame">
+                    <span>Comenzar</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Pantalla de Turno (quién juega) -->
+        <section class="screen" id="screenTurn">
+            <div class="turn-content">
+                <div class="turn-scores" id="turnScores">
+                    <!-- Se llena dinámicamente -->
+                </div>
+                <div class="turn-indicator">
+                    <div class="turn-team" id="turnTeamName">Equipo 1</div>
+                    <div class="turn-instruction">Prepara a tu equipo</div>
+                    <p class="turn-hint">Una persona describe, el resto adivina</p>
+                </div>
+                <button class="btn-primary btn-large" id="btnReady">
+                    <span>¡Listo!</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Pantalla de Juego (carta activa) -->
+        <section class="screen" id="screenGame">
+            <div class="game-content">
+                <div class="game-header">
+                    <div class="game-team" id="gameTeamName">Equipo 1</div>
+                    <div class="game-timer">
+                        <svg class="timer-svg-small" viewBox="0 0 36 36">
+                            <circle class="timer-bg-small" cx="18" cy="18" r="16"/>
+                            <circle class="timer-progress-small" id="timerProgressSmall" cx="18" cy="18" r="16"/>
+                        </svg>
+                        <span class="timer-value-small" id="timerValue">60</span>
+                    </div>
+                    <div class="game-score">
+                        <span id="currentTurnScore">0</span>
+                        <span class="score-label">este turno</span>
+                    </div>
+                </div>
+
+                <div class="word-card" id="wordCard">
+                    <div class="word-main" id="wordMain">PALABRA</div>
+                    <div class="word-forbidden">
+                        <div class="forbidden-title">🚫 Palabras prohibidas</div>
+                        <ul class="forbidden-list" id="forbiddenList">
+                            <li>Prohibida 1</li>
+                            <li>Prohibida 2</li>
+                            <li>Prohibida 3</li>
+                            <li>Prohibida 4</li>
+                            <li>Prohibida 5</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="game-actions">
+                    <button class="btn-wrong" id="btnWrong">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                        <span>Paso / Fallo</span>
+                    </button>
+                    <button class="btn-correct" id="btnCorrect">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        <span>¡Correcto!</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pantalla de Resultado del Turno -->
+        <section class="screen" id="screenTurnResult">
+            <div class="result-content">
+                <div class="result-team" id="resultTeamName">Equipo 1</div>
+                <div class="result-score">
+                    <span class="result-points" id="resultPoints">+3</span>
+                    <span class="result-label">puntos este turno</span>
+                </div>
+                <div class="result-total">
+                    Total: <span id="resultTotal">5</span> / <span id="resultGoal">10</span>
+                </div>
+                <button class="btn-primary btn-large" id="btnNextTurn">
+                    <span>Siguiente Equipo</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Pantalla de Ganador -->
+        <section class="screen" id="screenWinner">
+            <div class="winner-content">
+                <div class="winner-trophy">🏆</div>
+                <h2 class="winner-title">¡Victoria!</h2>
+                <div class="winner-team" id="winnerTeamName">Equipo 1</div>
+                <div class="winner-score">
+                    <span id="winnerScore">10</span> puntos
+                </div>
+                <div class="final-scores" id="finalScores">
+                    <!-- Se llena dinámicamente -->
+                </div>
+                <div class="winner-actions">
+                    <button class="btn-primary btn-large" id="btnPlayAgain">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 4v6h6M23 20v-6h-6"/>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                        </svg>
+                        <span>Jugar de nuevo</span>
+                    </button>
+                    <button class="btn-secondary" id="btnBackHome">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        </svg>
+                        <span>Inicio</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal de Reglas -->
+        <div class="modal" id="modalRules">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Cómo jugar</h3>
+                    <button class="modal-close" id="closeRules">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="rule">
+                        <span class="rule-number">1</span>
+                        <p>Divide a los jugadores en <strong>equipos</strong>. Cada equipo juega por turnos.</p>
+                    </div>
+                    <div class="rule">
+                        <span class="rule-number">2</span>
+                        <p>Una persona del equipo <strong>describe la palabra</strong> sin usar las palabras prohibidas.</p>
+                    </div>
+                    <div class="rule">
+                        <span class="rule-number">3</span>
+                        <p>El resto del equipo intenta <strong>adivinar</strong> antes de que se acabe el tiempo.</p>
+                    </div>
+                    <div class="rule">
+                        <span class="rule-number">4</span>
+                        <p>Si adivinan, <strong>+1 punto</strong> y nueva palabra. Si pasas o fallas, <strong>0 puntos</strong>.</p>
+                    </div>
+                    <div class="rule">
+                        <span class="rule-number">5</span>
+                        <p>El primer equipo en llegar a la <strong>meta de puntos</strong> gana.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
